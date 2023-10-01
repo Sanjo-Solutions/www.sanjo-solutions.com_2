@@ -5,7 +5,7 @@ Tags: translate, translation, multilingual, automatic translation, bilingual, fr
 Requires at least: 3.1.0
 Tested up to: 6.3.1
 Requires PHP: 5.6.20
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -127,6 +127,11 @@ For more information please check out our [documentation](https://translatepress
 
 
 == Changelog ==
+= 1.3.3 =
+* SEO Pack: Improved automatic slug translation when original slug contains hyphens by preventing translation engines from sometimes generating identical translations with the original slug
+* SEO Pack: Added filter trp_allow_redirect_to_translated_url to prevent redirect in custom cases
+* SEO Pack: Added filter trp_get_term_args when searching for the original term slug based on translation
+
 = 1.3.2 =
 * SEO Pack: Fixed automatic slug translation issue with The Events Calendar plugin
 * Automatic User Language Detection: Updated Geo IP database to 20230901 version

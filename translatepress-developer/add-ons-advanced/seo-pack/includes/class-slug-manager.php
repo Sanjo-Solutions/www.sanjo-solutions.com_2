@@ -254,6 +254,11 @@ class TRP_IN_SP_Slug_Manager {
             if (is_archive() ) {//301 redirect for term slug
                 global $wp_query;
                 $current_archive_url = $this->url_converter->cur_page_url();
+
+                if( !apply_filters('trp_allow_redirect_to_translated_url', true, $current_archive_url ) ){
+                    return;
+                }
+
                 if ( !isset($wp_query->query['post_type']) ) {
                     global $trp_all_taxonomies;
                     if( !isset( $trp_all_taxonomies ) )
@@ -437,6 +442,7 @@ class TRP_IN_SP_Slug_Manager {
         if ( isset( $post->ID ) && !empty( $post->ID ) && isset( $post->post_name ) && !empty( $post->post_name ) && !is_home() && !is_front_page() && !is_archive() && !is_search() ) {
             if ( !get_post_meta( $post->ID, $this->human_translated_slug_meta . $language_code, true ) &&
                 !get_post_meta( $post->ID, $this->automatic_translated_slug_meta . $language_code, true ) ) {
+                $post->post_name = str_replace('-', ' ', $post->post_name);
                 $translateable_information['translateable_strings'][] = $post->post_name;
                 $translateable_information['nodes'][]                 = array( 'type' => 'post_slug', 'post_id' => $post->ID );
             }
@@ -465,6 +471,7 @@ class TRP_IN_SP_Slug_Manager {
                             $translated_term_slug = trim( $translated_term_slug, '/\\' );
 
                             if ( empty( $translated_term_slug ) ) {
+                                $term_slug = str_replace('-', ' ', $term_slug);
                                 $translateable_information['translateable_strings'][] = $term_slug;
                                 $translateable_information['nodes'][]                 = array( 'type' => 'term_slug', 'term_id' => $term_object->term_id );
                             }
@@ -475,7 +482,8 @@ class TRP_IN_SP_Slug_Manager {
                             $tax_object         = get_taxonomy( $actual_taxonomy );
                             $original_base_slug = $this->get_rewrite_base_slug( $tax_object, $actual_taxonomy );
                             if ( $original_base_slug && strpos( trim( $original_base_slug, '/\\' ), '/' ) === false && strpos( $original_base_slug, '%' ) === false ) {
-                                $translateable_information['translateable_strings'][] = $original_base_slug;
+                                $original_base_slug_without_hyphens = str_replace('-', ' ', $original_base_slug);
+                                $translateable_information['translateable_strings'][] = $original_base_slug_without_hyphens;
                                 $translateable_information['nodes'][]                 = array( 'type' => 'tax_base_slug', 'tax_original_base_slug' => $original_base_slug );
                             }
                         }
@@ -505,7 +513,8 @@ class TRP_IN_SP_Slug_Manager {
                                 $post_type_object   = get_post_type_object( $post_type_string );
                                 $original_base_slug = $this->get_rewrite_base_slug( $post_type_object, $post_type_string );
                                 if ( $original_base_slug && strpos( trim( $original_base_slug, '/\\' ), '/' ) === false && strpos( $original_base_slug, '%' ) === false ) {
-                                    $translateable_information['translateable_strings'][] = $original_base_slug;
+                                    $original_base_slug_without_hyphens = str_replace('-', ' ', $original_base_slug);
+                                    $translateable_information['translateable_strings'][] = $original_base_slug_without_hyphens;
                                     $translateable_information['nodes'][]                 = array( 'type' => 'post_type_base_slug', 'post_type_original_base_slug' => $original_base_slug );
 
                                 }
@@ -685,6 +694,11 @@ class TRP_IN_SP_Slug_Manager {
 
                 //301 redirect for taxonomy and cpt base slug
                 $current_archive_url = $this->url_converter->cur_page_url();
+
+                if( !apply_filters('trp_allow_redirect_to_translated_url', true, $current_archive_url ) ){
+                    return $args;
+                }
+
                 $location = str_replace( '/'.$rewrite_slug.'/', '/'.$translated_rewrite_slug.'/', $current_archive_url  );
                 if ($location != $current_archive_url) {
                     $status = apply_filters( 'trp_redirect_status', 301, 'redirect_to_translated_slug' );
@@ -1265,10 +1279,13 @@ class TRP_IN_SP_Slug_Manager {
         global $wpdb;
 
         $all_possible_terms_ids = array();
-        $all_terms_in_taxonomy = get_terms( array(
+
+        $term_args = apply_filters( 'trp_get_term_args', array(
             'taxonomy' => $taxonomy,
-            'hide_empty' => false,
+            'hide_empty' => false
         ) );
+
+        $all_terms_in_taxonomy = get_terms( $term_args );
 
         $slug_decoded = urldecode($slug);
         $slug_encoded = urlencode($slug_decoded);

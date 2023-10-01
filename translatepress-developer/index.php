@@ -3,7 +3,7 @@
 Plugin Name: TranslatePress - Developer
 Plugin URI: https://translatepress.com/
 Description: Experience a better way of translating your WordPress site using a visual front-end translation editor, with full support for WooCommerce and site builders.
-Version: 1.3.2
+Version: 1.3.3
 Author: Cozmoslabs, Razvan Mocanu, Madalin Ungureanu
 Author URI: https://cozmoslabs.com/
 Text Domain: translatepress-multilingual
@@ -25,14 +25,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
-
-if (get_option('trp_license_status') != 'valid') {
-    $license_information_for_all_addons = [];
-    $license_information_for_all_addons['valid'][] =  true;
-    update_option('trp_license_details', $license_information_for_all_addons);
-    update_option('trp_license_key', '123456-123456-123456-123456');
-    update_option('trp_license_status', 'valid');
-}
 
 
 if( !class_exists('TRP_Handle_Included_Addons') ){
@@ -407,7 +399,7 @@ function trp_developer_update(){
         $license_key = trim(get_option('trp_license_key'));
         // setup the updater
         $edd_updater = new TRP_EDD_SL_Plugin_Updater(TRP_DEVELOPER_STORE_URL, __FILE__, array(
-                'version' => '1.3.2',        // current version number
+                'version' => '1.3.3',        // current version number
                 'license' => $license_key,    // license key (used get_option above to retrieve from DB)
                 'item_name' => TRP_DEVELOPER_ITEM_NAME,    // name of this plugin
                 'item_id' => '224',
