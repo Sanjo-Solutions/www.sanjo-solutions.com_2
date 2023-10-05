@@ -1,0 +1,17 @@
+/*
+Theme Name:   Sanjo Solutions
+Theme URI:    https://www.sanjo-solutions.com
+Description:  Theme for www.sanjo-solutions.com
+Author:
+Author URI:
+Template:     twentytwentythree
+Version:      1.0.0
+License:      GNU General Public License v2 or later
+License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+Tags:
+Text Domain:  sanjosolutions
+*/
+
+body {
+  --wp--style--root--padding-bottom: 81px;
+}

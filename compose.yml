@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - type: bind
+        source: ./www.sanjo-solutions.com
+        target: /var/www/html
+  db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=wordpress
+    ports:
+      - "3306:3306"
